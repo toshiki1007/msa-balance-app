@@ -42,10 +42,12 @@ def update(request):
 	if request.method != 'POST':
 		return JsonResponse(error_response)
 
-	user_id = request.POST.get('userId')
-	trading_user_id = request.POST.get('tradingUserId')
-	price = int(request.POST.get('price'))
-	type_flg = request.POST.get('typeFlg')
+	params = json.loads(request.body.decode())
+
+	user_id = params['userId']
+	trading_user_id = params['tradingUserId']
+	price = int(params['price'])
+	type_flg = params['typeFlg']
 
 	if type_flg == '0':
 		transaction_type_flg = 1
