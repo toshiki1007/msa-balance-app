@@ -16,8 +16,10 @@ def check(request):
 	if request.method != 'POST':
 		return JsonResponse(error_response)
 
-	user_id = request.POST.get('userId')
-	price = int(request.POST.get('price'))
+	params = json.loads(request.body.decode())
+
+	user_id = params['userId']
+	price = int(params['price'])
 
 	wallet = Wallet.objects.get(user_id = user_id)
 	wallet_id = wallet.wallet_id
