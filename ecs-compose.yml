@@ -6,7 +6,7 @@ services:
     command: ./uwsgi.sh
     environment:
       AWS_REGION: us-west-2
-      AWS_XRAY_DAEMON_ADDRESS: 'balance_x-ray-daemon:2000'
+      AWS_XRAY_DAEMON_ADDRESS: 'xray-daemon:2000'
     links:
       - balance_x-ray-daemon
     logging:
