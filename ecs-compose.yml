@@ -16,7 +16,7 @@ services:
         awslogs-region: us-west-2
         awslogs-stream-prefix: balance_app
   balance_nginx:
-    image: '636729331386.dkr.ecr.us-west-2.amazonaws.com/msa_balance_nginx:latest'
+    image: '636729331386.dkr.ecr.us-west-2.amazonaws.com/msa_nginx:latest'
     mem_limit: 268435456
     links:
       - balance_app
@@ -29,7 +29,7 @@ services:
         awslogs-region: us-west-2
         awslogs-stream-prefix: balance_nginx
   balance_x-ray-daemon:
-    image: '636729331386.dkr.ecr.us-west-2.amazonaws.com/x-ray_daemon:latest'
+    image: '636729331386.dkr.ecr.us-west-2.amazonaws.com/msa_x-ray-daemon:latest'
     mem_limit: 268435456
     ports:
       - '2000:2000/udp'
