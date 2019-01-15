@@ -6,7 +6,7 @@ services:
     command: ./uwsgi.sh
     environment:
       AWS_REGION: us-west-2
-      AWS_XRAY_DAEMON_ADDRESS: 'xray-daemon:2000'
+      AWS_XRAY_DAEMON_ADDRESS: 'balance_x-ray-daemon:2000'
     links:
       - balance_x-ray-daemon
     logging:
@@ -29,7 +29,7 @@ services:
         awslogs-region: us-west-2
         awslogs-stream-prefix: balance_nginx
   balance_x-ray-daemon:
-    image: 636729331386.dkr.ecr.us-west-2.amazonaws.com/x-ray_daemon
+    image: '636729331386.dkr.ecr.us-west-2.amazonaws.com/x-ray_daemon:latest'
     mem_limit: 268435456
     ports:
       - '2000:2000/udp'
