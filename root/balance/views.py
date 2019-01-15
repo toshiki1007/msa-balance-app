@@ -40,15 +40,23 @@ def update(request):
 	if request.method != 'POST':
 		return JsonResponse(error_response)
 
-	buyer_id = request.POST.get('buyerId')
-	seller_id = request.POST.get('sellerId')
+	user_id = request.POST.get('userId')
+	trading_user_id = request.POST.get('tradingUserId')
 	price = int(request.POST.get('price'))
+	type_flg = request.POST.get('typeFlg')
 
-	wallet = Wallet.objects.get(user_id = buyer_id)
+	if type_flg == '0':
+		transaction_type_flg = 1
+		trading_transaction_type_flg = 2
+	else:
+		transaction_type_flg = 3
+		trading_transaction_type_flg = 4
+
+	wallet = Wallet.objects.get(user_id = user_id)
 	wallet_id = wallet.wallet_id
 	wallet_balance =  wallet.balance
 
-	trading_wallet = Wallet.objects.get(user_id = seller_id)
+	trading_wallet = Wallet.objects.get(user_id = trading_user_id)
 	trading_wallet_id = trading_wallet.wallet_id
 	trading_wallet_balance = trading_wallet.balance
 
@@ -60,20 +68,28 @@ def update(request):
 		trading_wallet.balance = trading_wallet_balance + price
 		trading_wallet.save()
 
+		serial_number = Transaction.objects.filter(wallet_id = wallet_id).aggregate(Max('serial_number'))['serial_number__max']
+		if serial_number == None:
+			serial_number = 0
+
+		tradning_serial_number = Transaction.objects.filter(wallet_id = trading_wallet_id).aggregate(Max('serial_number'))['serial_number__max']
+		if tradning_serial_number == None:
+			tradning_serial_number = 0
+
 		#履歴create
 		buyer_transaction = Transaction.objects.create(
 			wallet_id = wallet,
-			serial_number = Transaction.objects.filter(wallet_id = wallet_id).aggregate(Max('serial_number'))['serial_number__max'] + 1,
+			serial_number = serial_number + 1,
 			trading_wallet_id = trading_wallet,
-			transaction_type = TransactionType.objects.get(id = 3),
+			transaction_type = TransactionType.objects.get(id = transaction_type_flg),
 			transaction_amount = -price,
 		)
 
 		seller_transaction = Transaction.objects.create(
 			wallet_id = trading_wallet,
-			serial_number = Transaction.objects.filter(wallet_id = trading_wallet_id).aggregate(Max('serial_number'))['serial_number__max'] + 1,
+			serial_number = tradning_serial_number + 1,
 			trading_wallet_id = wallet,
-			transaction_type = TransactionType.objects.get(id = 4),
+			transaction_type = TransactionType.objects.get(id = trading_transaction_type_flg),
 			transaction_amount = price,
 		)
 	except:
@@ -82,7 +98,7 @@ def update(request):
 
 	response = {
 		'statusCode': 200,
-		'body': body,
+		'body': None,
 	}
 
 	return JsonResponse(response)
