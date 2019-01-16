@@ -5,42 +5,17 @@ from django.views.decorators.csrf import csrf_exempt
 
 import json
 
-error_response = {
-		'statusCode': 400,
-		'body': None,
+def response(status_code, error_msg):
+	return {
+		'statusCode': status_code,
+		'errorMessage': error_msg,
 	}
-
-#残高確認処理
-@csrf_exempt
-def check(request):
-	if request.method != 'POST':
-		return JsonResponse(error_response)
-
-	params = json.loads(request.body.decode())
-
-	user_id = params['userId']
-	price = int(params['price'])
-
-	wallet = Wallet.objects.get(user_id = user_id)
-	wallet_id = wallet.wallet_id
-
-	#残高chk
-	wallet_balance =  wallet.balance
-	if wallet_balance < price:
-		return JsonResponse(error_response)
-
-	response = {
-		'statusCode': 200,
-		'body': None,
-	}
-
-	return JsonResponse(response)
 
 #残高更新処理
 @csrf_exempt
 def update(request):
 	if request.method != 'POST':
-		return JsonResponse(error_response)
+		return JsonResponse(response(400, '不正アクセスエラー'))
 
 	params = json.loads(request.body.decode())
 
@@ -65,6 +40,11 @@ def update(request):
 	trading_wallet = Wallet.objects.get(user_id = trading_user_id)
 	trading_wallet_id = trading_wallet.wallet_id
 	trading_wallet_balance = trading_wallet.balance
+
+	#残高chk
+	wallet_balance =  wallet.balance
+	if wallet_balance < price:
+		return JsonResponse(response(400, '残高不足エラー'))
 
 	try:
 		#残高update
@@ -99,12 +79,6 @@ def update(request):
 			transaction_amount = price,
 		)
 	except:
-		return JsonResponse(error_response)
+		return JsonResponse(response(400, '残高更新エラー'))
 
-
-	response = {
-		'statusCode': 200,
-		'body': None,
-	}
-
-	return JsonResponse(response)
+	return JsonResponse(response(200, None))
