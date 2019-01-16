@@ -1,6 +1,12 @@
-version: '2'
-services:
-  app:
-    build: .
-    command: ./uwsgi.sh
-    container_name: app
+balance_app:
+  build: .
+  command: ./uwsgi.sh
+
+nginx:
+  build: ./nginx
+  links:
+    - balance_app
+  volumes_from:
+    - balance_app
+  ports:
+    - "0.0.0.0:80:80"
