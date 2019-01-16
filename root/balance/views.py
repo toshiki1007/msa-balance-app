@@ -49,9 +49,11 @@ def update(request):
 	price = int(params['price'])
 	type_flg = params['typeFlg']
 
+	#type_flg==0 ⇒ 送金取引
 	if type_flg == '0':
 		transaction_type_flg = 1
 		trading_transaction_type_flg = 2
+	#type_flg==1 ⇒ 商品取引
 	else:
 		transaction_type_flg = 3
 		trading_transaction_type_flg = 4
