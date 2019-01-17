@@ -21,7 +21,7 @@ services:
     links:
       - balance_app
     ports:
-      - '80:80'
+      - '9000:80'
     logging:
       driver: awslogs
       options:
