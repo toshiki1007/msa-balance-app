@@ -83,4 +83,4 @@ def update(request):
 	except:
 		return response(400, '残高更新エラー')
 
-	return response(200, None)
+	return response(200, '残高更新完了')
