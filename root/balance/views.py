@@ -7,14 +7,16 @@ from django.http import HttpResponse
 import json
 
 def response(status_code, msg):
-	json_str = json.dumps(msg, ensure_ascii=False, indent=4)
-	return HttpResponse(json_str, content_type='application/json; charset=UTF-8', status=status_code)
+	res_msg = {
+		'message': msg
+	}
+	return HttpResponse(res_msg, content_type='application/json; charset=UTF-8', status=status_code)
 
 #残高更新処理
 @csrf_exempt
 def update(request):
 	if request.method != 'POST':
-		return response(400, {'msg':'不正アクセスエラー'})
+		return response(400, '不正アクセスエラー')
 
 	params = json.loads(request.body.decode())
 
@@ -43,7 +45,7 @@ def update(request):
 	#残高chk
 	wallet_balance =  wallet.balance
 	if wallet_balance < price:
-		return response(400, {'msg':'残高不足エラー'})
+		return response(400, '残高不足エラー')
 
 	try:
 		#残高update
@@ -78,6 +80,6 @@ def update(request):
 			transaction_amount = price,
 		)
 	except:
-		return response(400, {'msg':'残高更新エラー'})
+		return response(400, '残高更新エラー')
 
-	return response(200, {'msg':None})
+	return response(200, None)
