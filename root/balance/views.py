@@ -11,7 +11,7 @@ def response(status_code, msg):
 		'message': msg
 	}
 	json_str = json.dumps(res_msg, ensure_ascii=False, indent=4)
-	return HttpResponse(res_msg, content_type='application/json; charset=UTF-8', status=status_code)
+	return HttpResponse(json_str, content_type='application/json; charset=UTF-8', status=status_code)
 
 #残高更新処理
 @csrf_exempt
