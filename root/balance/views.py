@@ -20,7 +20,7 @@ def response(status_code, msg):
 @csrf_exempt
 def update(request):
 	if request.method != 'POST':
-		return response(200, 'invalid access error')
+		return response(400, 'invalid access error')
 
 	params = json.loads(request.body.decode())
 
