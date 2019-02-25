@@ -20,7 +20,7 @@ def response(status_code, msg):
 @csrf_exempt
 def update(request):
 	if request.method != 'POST':
-		return response(400, 'invalid access error')
+		return response(200, 'invalid access error')
 
 	params = json.loads(request.body.decode())
 
@@ -49,7 +49,7 @@ def update(request):
 	#残高chk
 	wallet_balance =  wallet.balance
 	if wallet_balance < price:
-		return response(200, 'insufficient balance error')
+		return response(400, 'insufficient balance error')
 
 	try:
 		#残高update
