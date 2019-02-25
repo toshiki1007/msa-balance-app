@@ -79,16 +79,9 @@ WSGI_APPLICATION = 'msa_app.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'msa_db',
-        'HOST': 'msadb.ch5vb2nmmcpb.us-west-2.rds.amazonaws.com',
-        'USER': 'admin',
-        'PASSWORD': 'password',
-        'ATOMIC_REQUESTS': True,
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-        }
-    }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': ':memory:',
+    },
 }
 
 
@@ -129,7 +122,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
 
 XRAY_RECORDER = {
-    'AUTO_INSTRUMENT': True,
+    'AUTO_INSTRUMENT': False,
     'AWS_XRAY_CONTEXT_MISSING': 'LOG_ERROR',
     'AWS_XRAY_DAEMON_ADDRESS': '127.0.0.1:2000',
     'AWS_XRAY_TRACING_NAME': 'msa app update_balance',

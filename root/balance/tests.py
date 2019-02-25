@@ -32,13 +32,13 @@ class WalletTests(TestCase):
 		res = self.client.post(url, content_type='application/json', data=json.dumps(data)).json()
 		self.assertEqual (res['statusCode'], 200)
 		self.assertEqual (res['message'], 'success')
-		
+
 	def test_buy_fail(self):
 		url = reverse('update')
 		data = {
 			"userId":"buyer",
 			"tradingUserId":"seller",
-			"price":"100",
+			"price":"10000",
 			"typeFlg":"1"
 		}
 		res = self.client.post(url, content_type='application/json', data=json.dumps(data)).json()
