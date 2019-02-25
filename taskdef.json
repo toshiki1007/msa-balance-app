@@ -3,7 +3,7 @@
 	"containerDefinitions": [
 		{
 			"name": "balance_app",
-			"image": "<IMAGE1_NAME>",
+			"image": "636729331386.dkr.ecr.us-west-2.amazonaws.com/msa_balance_app:latest",
 			"portMappings": [
 				{
 					"containerPort": 5000,
