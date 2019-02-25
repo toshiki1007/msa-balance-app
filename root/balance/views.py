@@ -49,7 +49,7 @@ def update(request):
 	#残高chk
 	wallet_balance =  wallet.balance
 	if wallet_balance < price:
-		return response(400, 'insufficient balance error')
+		return response(200, 'insufficient balance error')
 
 	try:
 		#残高update
