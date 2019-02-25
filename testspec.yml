@@ -4,8 +4,9 @@ phases:
     commands:
       - echo install started
       - apt-get update -y
+      - cd root
       - pip install -r requirements.txt
   build:
     commands:
       - echo test started
-      - python root/manage.py  test --settings msa_app.ci_settings
+      - python manage.py  test --settings msa_app.ci_settings
