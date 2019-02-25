@@ -22,6 +22,11 @@ services:
       - balance_app
     ports:
       - '0:80'
+    command: >
+      /bin/sh -c "envsubst '$$SERVER_NAME'
+      < /etc/nginx/nginx.conf.template >
+      /etc/nginx/nginx.conf
+      && nginx -g 'daemon off;'"
     logging:
       driver: awslogs
       options:
