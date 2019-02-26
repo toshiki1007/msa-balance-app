@@ -1,0 +1,262 @@
+{
+	"ipcMode": null,
+	"executionRoleArn": null,
+	"containerDefinitions": [
+		{
+			"dnsSearchDomains": [],
+			"logConfiguration": {
+				"logDriver": "awslogs",
+				"options": {
+					"awslogs-group": "msa_app",
+					"awslogs-region": "us-west-2",
+					"awslogs-stream-prefix": "balance_app"
+				}
+			},
+			"entryPoint": [],
+			"portMappings": [
+				{
+					"hostPort": 5000,
+					"protocol": "tcp",
+					"containerPort": 5000
+        }
+      ],
+			"command": [
+        "./uwsgi.sh"
+      ],
+			"linuxParameters": {
+				"capabilities": {
+					"add": null,
+					"drop": null
+				},
+				"sharedMemorySize": null,
+				"tmpfs": null,
+				"devices": null,
+				"initProcessEnabled": null
+			},
+			"cpu": 0,
+			"environment": [
+				{
+					"name": "AWS_REGION",
+					"value": "us-west-2"
+        },
+				{
+					"name": "AWS_XRAY_DAEMON_ADDRESS",
+					"value": "127.0.0.1:2000"
+        }
+      ],
+			"resourceRequirements": null,
+			"ulimits": null,
+			"dnsServers": [],
+			"mountPoints": [],
+			"workingDirectory": null,
+			"secrets": null,
+			"dockerSecurityOptions": [],
+			"memory": 244,
+			"memoryReservation": null,
+			"volumesFrom": [],
+			"image": "<IMAGE1_NAME>",
+			"disableNetworking": null,
+			"interactive": null,
+			"healthCheck": null,
+			"essential": true,
+			"links": [],
+			"hostname": null,
+			"extraHosts": null,
+			"pseudoTerminal": null,
+			"user": null,
+			"readonlyRootFilesystem": false,
+			"dockerLabels": null,
+			"systemControls": null,
+			"privileged": false,
+			"name": "balance_app"
+    },
+		{
+			"dnsSearchDomains": [],
+			"logConfiguration": {
+				"logDriver": "awslogs",
+				"options": {
+					"awslogs-group": "msa_app",
+					"awslogs-region": "us-west-2",
+					"awslogs-stream-prefix": "balance_xray-daemon"
+				}
+			},
+			"entryPoint": [],
+			"portMappings": [
+				{
+					"hostPort": 2000,
+					"protocol": "udp",
+					"containerPort": 2000
+        }
+      ],
+			"command": [
+        "/usr/bin/xray",
+        "--bind",
+        "0.0.0.0:2000",
+        "--region",
+        "us-west-2",
+        "--buffer-memory",
+        "64",
+        "--log-level",
+        "dev",
+        "--log-file",
+        "/dev/stdout"
+      ],
+			"linuxParameters": {
+				"capabilities": {
+					"add": null,
+					"drop": null
+				},
+				"sharedMemorySize": null,
+				"tmpfs": null,
+				"devices": null,
+				"initProcessEnabled": null
+			},
+			"cpu": 0,
+			"environment": [],
+			"resourceRequirements": null,
+			"ulimits": null,
+			"dnsServers": [],
+			"mountPoints": [],
+			"workingDirectory": null,
+			"secrets": null,
+			"dockerSecurityOptions": [],
+			"memory": 122,
+			"memoryReservation": null,
+			"volumesFrom": [],
+			"image": "amazon/aws-xray-daemon",
+			"disableNetworking": null,
+			"interactive": null,
+			"healthCheck": null,
+			"essential": true,
+			"links": [],
+			"hostname": null,
+			"extraHosts": null,
+			"pseudoTerminal": null,
+			"user": null,
+			"readonlyRootFilesystem": false,
+			"dockerLabels": null,
+			"systemControls": null,
+			"privileged": false,
+			"name": "aws-xray-daemon"
+    },
+		{
+			"dnsSearchDomains": [],
+			"logConfiguration": {
+				"logDriver": "awslogs",
+				"options": {
+					"awslogs-group": "msa_app",
+					"awslogs-region": "us-west-2",
+					"awslogs-stream-prefix": "balance_nginx"
+				}
+			},
+			"entryPoint": [],
+			"portMappings": [
+				{
+					"hostPort": 80,
+					"protocol": "tcp",
+					"containerPort": 80
+        }
+      ],
+			"command": [
+        "/bin/sh",
+        "-c",
+        "envsubst '$SERVER_NAME'  < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf  && nginx -g 'daemon off;'"
+      ],
+			"linuxParameters": {
+				"capabilities": {
+					"add": null,
+					"drop": null
+				},
+				"sharedMemorySize": null,
+				"tmpfs": null,
+				"devices": null,
+				"initProcessEnabled": null
+			},
+			"cpu": 0,
+			"environment": [
+				{
+					"name": "SERVER_NAME",
+					"value": "localhost"
+        }
+      ],
+			"resourceRequirements": null,
+			"ulimits": null,
+			"dnsServers": [],
+			"mountPoints": [],
+			"workingDirectory": null,
+			"secrets": null,
+			"dockerSecurityOptions": [],
+			"memory": 122,
+			"memoryReservation": null,
+			"volumesFrom": [],
+			"image": "636729331386.dkr.ecr.us-west-2.amazonaws.com/msa_nginx:latest",
+			"disableNetworking": null,
+			"interactive": null,
+			"healthCheck": null,
+			"essential": true,
+			"links": [],
+			"hostname": null,
+			"extraHosts": null,
+			"pseudoTerminal": null,
+			"user": null,
+			"readonlyRootFilesystem": false,
+			"dockerLabels": null,
+			"systemControls": null,
+			"privileged": false,
+			"name": "balance_nginx"
+    }
+  ],
+	"placementConstraints": [],
+	"memory": null,
+	"taskRoleArn": null,
+	"compatibilities": [
+    "EC2"
+  ],
+	"taskDefinitionArn": "arn:aws:ecs:us-west-2:636729331386:task-definition/balance_api:24",
+	"family": "balance_api",
+	"requiresAttributes": [
+		{
+			"targetId": null,
+			"targetType": null,
+			"value": null,
+			"name": "com.amazonaws.ecs.capability.docker-remote-api.1.17"
+    },
+		{
+			"targetId": null,
+			"targetType": null,
+			"value": null,
+			"name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+    },
+		{
+			"targetId": null,
+			"targetType": null,
+			"value": null,
+			"name": "ecs.capability.task-eni"
+    },
+		{
+			"targetId": null,
+			"targetType": null,
+			"value": null,
+			"name": "com.amazonaws.ecs.capability.ecr-auth"
+    },
+		{
+			"targetId": null,
+			"targetType": null,
+			"value": null,
+			"name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+    },
+		{
+			"targetId": null,
+			"targetType": null,
+			"value": null,
+			"name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+    }
+  ],
+	"pidMode": null,
+	"requiresCompatibilities": [
+    "EC2"
+  ],
+	"networkMode": "awsvpc",
+	"cpu": null,
+	"volumes": []
+}
